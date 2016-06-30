@@ -1,0 +1,35 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Login - Spring Boot, Spring Data, Spring Security, JSF, Primefaces, JasperRepost</title>
+    </h:head>
+    <h:body style="background-color: black">
+        <p:panel style="background-color: black;text-align: center">
+            <h1 style="font: xx-small; color: white">Spring Boot, Spring Data, Spring Security, JSF, Primefaces, JasperRepost</h1>
+        </p:panel>
+        <br/><br/><br/><br/><br/><br/>
+        <div class="ui-g">
+            <div class="ui-g-5" >
+            </div>
+            <div class="ui-g-2" >
+                <p:panel header="Login" style="text-align: center">
+                    <form id="login_form" action="#{request.contextPath}/login" method="post">
+                        <input size="14" placeholder="Login" type="text" id="username" name="username" class="ui-corner-all" required="required" />
+                        <br/>
+                        <br/>
+                        <input size="14" placeholder="Senha" type="password" id="password" name="password" class="ui-corner-all" required="required" />
+                        <br/>
+                        <br/>
+                        <button type="submit" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only">
+                            <span class="ui-button-text">Logar</span>
+                        </button>
+                    </form>
+                </p:panel>
+            </div>
+            <div class="ui-g-5" >
+            </div>
+        </div>
+    </h:body>
+</html>

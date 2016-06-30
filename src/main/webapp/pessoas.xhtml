@@ -1,0 +1,77 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<f:view contentType="text/html" xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+        xmlns:p="http://primefaces.org/ui">
+
+    <f:metadata>
+        <f:viewAction action="#{pessoaBean.preparaLista()}"/>
+    </f:metadata>
+
+    <html>
+
+        <h:head>
+        	<title>Pessoas - Spring Boot, Spring Data, Spring Security, JSF, Primefaces, JasperRepost</title>
+        </h:head>
+
+        <h:body style="background-color: black;">
+
+            <h:form id="form">
+            <div style="color: white;">
+            <p:spacer width="10"></p:spacer>
+            <p:outputLabel id="usuariologado" value="Usuário Logado : #{pessoaBean.usuarioLogado}" ></p:outputLabel>
+            </div>
+                <div class="ui-g">
+                
+                    <div class="ui-g-6">
+                        <p:panel header="Pessoas" style="height: 120px">
+                            <p:inputText id="id" value="#{pessoaBean.pessoa.id}" rendered="false"></p:inputText>
+                            <p:inputText id="nome" value="#{pessoaBean.pessoa.nome}" placeholder="Nome"  style="width: 55%"></p:inputText>
+                            <p:spacer width="10"></p:spacer>
+                            <p:inputText id="telefone" value="#{pessoaBean.pessoa.telefone}" placeholder="Telefone" style="width: 20%"></p:inputText>
+                            <p:spacer width="10"></p:spacer>
+                            <p:commandButton action="#{pessoaBean.salvar}" value="Salvar" update="tabela nome telefone form:pesquisanome form:pesquisatelefone" oncomplete="$(function(){PrimeFaces.focus('form:nome');});"></p:commandButton>
+                        </p:panel>
+                    </div>
+                    <div class="ui-g-6" align="center">
+                        <p:panel header="Funções" style="height: 120px">
+                            <p:commandButton value="Relatório" ajax="false">
+                                <p:fileDownload value="#{pessoaImprimirBean.sampleReportPDF}" />
+                            </p:commandButton>
+                            <p:button value="Cadastro Usuários" outcome="/usuarios.jsf"></p:button>
+                            <p:button value="Configurações" outcome="/config/config.jsf"></p:button>
+                            <p:button value="LogOut" href="/logout"></p:button>
+                        </p:panel>
+                    </div>
+                    <div class="ui-g-12" >
+                        <p:panel header="Pesquisa">
+                            <p:inputText id="pesquisanome" value="#{pessoaBean.nome}" placeholder="Pesquisa Nome" style="width: 59%">
+                                <p:ajax event="keyup" listener="#{pessoaBean.pesquisaPorNome()}" update="tabela"></p:ajax>
+                            </p:inputText>
+                            <p:inputText id="pesquisatelefone" value="#{pessoaBean.telefone}" placeholder="Pesquisa Telefone" style="width: 29%">
+                                <p:ajax event="keyup" listener="#{pessoaBean.pesquisaPorTelefone()}" update="tabela"></p:ajax>
+                            </p:inputText>
+                            <p:dataTable sortBy="#{p.nome}" id="tabela" emptyMessage="Sem pessoas cadastradas" var="p" value="#{pessoaBean.todas}" >
+                                <p:column headerText="Codígo" rendered="false">
+                                    <p:outputLabel value="#{p.id}"></p:outputLabel>
+                                </p:column>
+                                <p:column headerText="Nome" sortBy="#{p.nome}"  > <!-- filterBy="#{p.nome}" filterMatchMode="contains" -->
+                                    <p:outputLabel value="#{p.nome}"></p:outputLabel>
+                                </p:column>
+                                <p:column headerText="Telefone" width="30%" > <!-- filterBy="#{p.telefone}" filterMatchMode="contains" -->
+                                    <p:outputLabel value="#{p.telefone}"></p:outputLabel>
+                                </p:column>
+                                <p:column headerText="Ações" width="10%">
+                                    <p:commandButton icon="fa fa-pencil" action="#{pessoaBean.editar(p.id)}" update="tabela form:nome form:telefone form:usuariologado form:pesquisanome form:pesquisatelefone" oncomplete="$(function(){PrimeFaces.focus('form:nome');});"></p:commandButton>
+                                    <p:commandButton icon="fa fa-trash" action="#{pessoaBean.excluir(p.id)}" update="tabela form:pesquisanome form:pesquisatelefone" oncomplete="$(function(){PrimeFaces.focus('form:nome');});"></p:commandButton>
+                                </p:column>
+                            </p:dataTable>
+                        </p:panel>
+                    </div>
+                </div>
+            </h:form>
+        </h:body>
+    </html>
+</f:view>

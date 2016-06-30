@@ -1,0 +1,80 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<f:view contentType="text/html" xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+        xmlns:p="http://primefaces.org/ui">
+
+    <f:metadata>
+        <f:viewAction action="#{usuarioBean.preparaLista()}"/>
+    </f:metadata>
+
+    <html>
+
+        <h:head>
+        	<title>Usuários - Spring Boot, Spring Data, Spring Security, JSF, Primefaces, JasperRepost</title>
+        </h:head>
+
+        <h:body style="background-color: black">
+
+            <h:form id="form">
+            <div style="color: white;">
+            <p:spacer width="10"></p:spacer>
+            <p:outputLabel id="usuariologado" value="Usuário Logado : #{pessoaBean.usuarioLogado}" ></p:outputLabel>
+            </div>
+                <div class="ui-g">
+                    <div class="ui-g-6">
+                        <p:panel header="Cadastro de Usuários" style="height: 100px">
+                            <p:inputText id="id" value="#{usuarioBean.usuario.id}" rendered="false"></p:inputText>
+                            <p:inputText id="login" value="#{usuarioBean.usuario.username}" placeholder="Login"  style="width: 20%"></p:inputText>
+                            <p:spacer width="10"></p:spacer>
+                            <p:inputText id="senha" value="#{usuarioBean.usuario.password}" placeholder="Senha" style="width: 20%"></p:inputText>
+                            <p:spacer width="10"></p:spacer>
+                            <p:selectBooleanCheckbox id="ativo" itemLabel="Ativo" value="#{usuarioBean.usuario.enabled}" />
+                            <p:spacer width="10"></p:spacer>
+                            <p:inputText id="role" value="#{usuarioBean.usuario.role}" placeholder="Perfil" style="width: 20%"></p:inputText>
+                            <p:spacer width="10"></p:spacer>
+                            <p:commandButton action="#{usuarioBean.salvar}" value="Salvar" update="tabela login senha role ativo form:pesquisalogin form:pesquisarole" oncomplete="$(function(){PrimeFaces.focus('form:login');});"></p:commandButton>
+                        </p:panel>
+                    </div>
+                    <div class="ui-g-6" align="center">
+                        <p:panel header="Funções" style="height: 100px">
+                            <p:button value="Cadastro Pessoas" outcome="/pessoas.jsf"></p:button>
+                            <p:button value="Configurações" outcome="/config/config.jsf"></p:button>
+                            <p:button value="LogOut" href="/logout"></p:button>
+                        </p:panel>
+                    </div>
+                    <div class="ui-g-12" >
+                        <p:panel header="Pesquisa">
+                            <p:inputText id="pesquisalogin" value="#{usuarioBean.username}" placeholder="Pesquisa Login" style="width: 59%">
+                                <p:ajax event="keyup" listener="#{usuarioBean.pesquisaPorUsername()}" update="tabela"></p:ajax>
+                            </p:inputText>
+                            <p:inputText id="pesquisarole" value="#{usuarioBean.role}" placeholder="Pesquisa Role" style="width: 29%">
+                                <p:ajax event="keyup" listener="#{usuarioBean.pesquisaPorRole()}" update="tabela"></p:ajax>
+                            </p:inputText>
+                            <p:dataTable sortBy="#{u.username}" id="tabela" emptyMessage="Sem usuarios cadastrados" var="u" value="#{usuarioBean.todos}" >
+                                <p:column headerText="Codígo" rendered="false">
+                                    <p:outputLabel value="#{u.id}"></p:outputLabel>
+                                </p:column>
+                                <p:column headerText="Login" sortBy="#{u.username}"> 
+                                    <p:outputLabel value="#{u.username}"></p:outputLabel>
+                                </p:column>
+                                <p:column headerText="Senha" width="30%" >
+                                    <p:outputLabel value="#{u.password}"></p:outputLabel>
+                                </p:column>
+                                <p:column headerText="Role" width="30%" >
+                                    <p:outputLabel value="#{u.role}"></p:outputLabel>
+                                </p:column>
+                                <p:column headerText="Ações" width="10%">
+                                    <p:commandButton icon="fa fa-pencil" action="#{usuarioBean.editar(u.id)}" update="tabela form:login form:senha form:role form:ativo form:pesquisalogin form:pesquisarole" oncomplete="$(function(){PrimeFaces.focus('form:login');});"></p:commandButton>
+                                    <p:commandButton icon="fa fa-trash" action="#{usuarioBean.excluir(u.id)}" update="tabela form:pesquisalogin form:pesquisarole" oncomplete="$(function(){PrimeFaces.focus('form:login');});"></p:commandButton>
+                                </p:column>
+                            </p:dataTable>
+                        </p:panel>
+                    </div>
+                </div>
+            </h:form>
+        </h:body>
+    </html>
+</f:view>
