@@ -47,6 +47,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public void configAuthentication(AuthenticationManagerBuilder auth) {
 
         try {
+            // AQUI DEFINE UM USUARIO PARA AUTENTICACAO EM MEMORIA, ISSO E OPCIONAL
+            auth.inMemoryAuthentication().withUser("dev").password("dev").roles("ADMIN");
+            // AQUI E FEITO A BUSCA DO UUSUARIO E DA ROLE NO BANCO DE DADOS.
             auth.jdbcAuthentication().dataSource(dataSource)
                     .usersByUsernameQuery(
                             "select username,password,enabled from usuario where username=?")
@@ -57,17 +60,5 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             Logger.getLogger(WebSecurityConfig.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
-// pesquisa usuario em memoria.
-//    @Autowired 
-//    UsuarioService usuarioService;
-//
-//    @Autowired
-//    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-//        List<Usuario> todos = usuarioService.todos();
-//        for (Usuario usuario : todos) {
-//            auth.inMemoryAuthentication().withUser(usuario.getLogin()).password(usuario.getSenha()).roles(usuario.getRole());
-//        }
-//    }
     
 }
